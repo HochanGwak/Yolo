@@ -27,7 +27,7 @@ classifier_filename = './class/classifier.pkl'
 npy='./npy'
 train_img="./train_img"
 
-global x
+global x 
 
 
 
@@ -187,18 +187,19 @@ def result_frames(video):
                         
                 endtimer = time.time()
                 fps = 1/(endtimer-timer)
-                cv2.rectangle(frame,(15,30),(135,60),(0,255,255),-1)
-                cv2.putText(frame, "fps: {:.2f}".format(fps), (20, 50),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+                # cv2.rectangle(frame,(15,30),(135,60),(0,255,255),-1)
+                # cv2.putText(frame, "fps: {:.2f}".format(fps), (20, 50),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
                 cv2.imshow('Face Recognition', frame)
+                key = cv2.waitKey(30)
                 print(endtimer-tm,'111')
-                if (endtimer - tm) >30:
+                if (endtimer - tm) >12:
                     if len(list(a)) == 0:
                         x = '전원출석'
                         print(x)
                     else:
                         print('결석 인원 : ',end='')
-                        for i in list(a):
-                            print(i,end=' ')
+                        for x in list(a):
+                            print(x,end=' ')
 
 
                     break
@@ -219,7 +220,8 @@ def result_frames(video):
                 frame1 = buffer.tobytes()
                 yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame1 + b'\r\n')
-    print(x)
+    print(x,234)
+    
     return x   
            
 
@@ -236,7 +238,7 @@ def upload_process():
     file.save(os.path.join('static/image/', filename))
     print(filename,8969)
     y = result_frames(f'static/image/{filename}')
-    print(y,666)
+    
     # nparr = np.frombuffer(file.read(), np.uint8)
     # image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
@@ -264,8 +266,9 @@ def result():
     filename = request.args.get('filename')
     y = request.args.get('y')
     print(y,7770)
-    # result_frames(f'static/image/{filename}')
+    z = result_frames(f'static/image/{filename}')
     # print(x,890)
+    print(z,5673)
     # return Response(result_frames(),mimetype='multipart/x-mixed-replace;boundary=frame')
     # return render_template("result.html", file_name = "image/park.mp4")
     return render_template("result.html",filename=filename,y=y)

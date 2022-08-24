@@ -16,6 +16,13 @@ modeldir = './model/20180402-114759.pb'
 classifier_filename = './class/classifier.pkl'
 npy='./npy'
 train_img="./train_img"
+
+
+
+
+
+
+
 with tf.Graph().as_default():
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.6)
     sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
@@ -40,11 +47,47 @@ with tf.Graph().as_default():
         with open(classifier_filename_exp, 'rb') as infile:
             (model, class_names) = pickle.load(infile,encoding='latin1')
         
-        video_capture = cv2.VideoCapture(video)
+        video_capture = cv2.VideoCapture(0)
+
+        # fps = video_capture.get(cv2.CAP_PROP_FPS)
+        fps = 10
+        print('fps',fps)
+
+        if fps == 0.0:
+            fps = 30.0
+
+        time_per_frame_video = 1/fps
+        last_time = time.perf_counter()
+
+        width = int(video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        writer = cv2.VideoWriter('save_img/' + 'output.mp4',fourcc,fps,(width,height))
+
+
+
+
+
+
+
         print('Start Recognition')
         a = set(HumanNames)
         while True:
             ret, frame = video_capture.read()
+            copy10 = frame.copy()
+            writer.write(copy10)
+            time_per_frame = time.perf_counter() - last_time
+            time_sleep_frame = max(0,time_per_frame_video - time_per_frame)
+            time.sleep(time_sleep_frame)
+
+            real_fps = 1/(time.perf_counter()-last_time)
+            last_time = time.perf_counter()
+            
+            x = 30
+            y = 50
+            text = '%.2f fps' % real_fps
             #frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)    #resize frame (optional)
             timer =time.time()
             if frame.ndim == 2:
@@ -122,4 +165,5 @@ with tf.Graph().as_default():
                
                 break
         video_capture.release()
+        writer.release()
         cv2.destroyAllWindows()
