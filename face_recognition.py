@@ -10,7 +10,7 @@ import time
 import pickle
 from PIL import Image
 import tensorflow.compat.v1 as tf
-video= 'yu.mp4'
+video= 'park_yu.mp4'
 # video= 'naver_0082.jpg'
 modeldir = './model/20180402-114759.pb'
 classifier_filename = './class/classifier.pkl'
@@ -42,6 +42,7 @@ with tf.Graph().as_default():
         
         video_capture = cv2.VideoCapture(video)
         print('Start Recognition')
+        a = set(HumanNames)
         while True:
             ret, frame = video_capture.read()
             #frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)    #resize frame (optional)
@@ -78,9 +79,12 @@ with tf.Graph().as_default():
                         emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
                         predictions = model.predict_proba(emb_array)
                         best_class_indices = np.argmax(predictions, axis=1)
+                      
+                        
                         best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
                         if best_class_probabilities>0.87:
                             cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)    #boxing face
+                            
                             for H_i in HumanNames:
                                 if HumanNames[best_class_indices[0]] == H_i:
                                     result_names = HumanNames[best_class_indices[0]]
@@ -88,6 +92,8 @@ with tf.Graph().as_default():
                                     cv2.rectangle(frame, (xmin, ymin-20), (xmax, ymin-2), (0, 255,255), -1)
                                     cv2.putText(frame, result_names, (xmin,ymin-5), cv2.FONT_HERSHEY_COMPLEX_SMALL,
                                                 1, (0, 0, 0), thickness=1, lineType=1)
+                                    a = a - set(result_names.split())
+                                    
                                     
                         else :
                             cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
@@ -106,7 +112,14 @@ with tf.Graph().as_default():
             key= cv2.waitKey(1)
             if key== 113: # "q"
                 #직접 작성스타트
-                
+                # print(result_names,'aaa')
+                if len(list(a)) == 0:
+                    print('전원출석')
+                else:
+                    print('결석 인원 : ',end='')
+                    for i in list(a):
+                        print(i,end=' ')
+               
                 break
         video_capture.release()
         cv2.destroyAllWindows()
