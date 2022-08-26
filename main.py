@@ -1,6 +1,6 @@
 from fileinput import filename
 import re
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, Response
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, Response, session
 import numpy as np
 import mimetypes
 import cv2
@@ -27,7 +27,6 @@ classifier_filename = './class/classifier.pkl'
 npy='./npy'
 train_img="./train_img"
 
-global x 
 
 
 
@@ -61,7 +60,7 @@ app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg','mp4'])
 def upload():
     return render_template('upload.html')
 
-def result_frames(video):
+def result_frames(video)-> str:
     # cap = cv2.VideoCapture(video)
     # width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     # height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
@@ -94,7 +93,7 @@ def result_frames(video):
     #     yield (b'--frame\r\n'
     #            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
     
-    global x
+   
     with tf.Graph().as_default():
         gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.6)
         sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
@@ -201,7 +200,7 @@ def result_frames(video):
                         for x in list(a):
                             print(x,end=' ')
 
-
+                   
                     break
                 # key= cv2.waitKey(1)
                 # if key== 113: # "q"
@@ -221,7 +220,9 @@ def result_frames(video):
                 yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame1 + b'\r\n')
     print(x,234)
-    
+    video_capture.release()
+    cv2.destroyAllWindows()
+
     return x   
            
 
@@ -238,7 +239,7 @@ def upload_process():
     file.save(os.path.join('static/image/', filename))
     print(filename,8969)
     y = result_frames(f'static/image/{filename}')
-    
+    print(y,'surerere')
     # nparr = np.frombuffer(file.read(), np.uint8)
     # image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
@@ -267,11 +268,15 @@ def result():
     y = request.args.get('y')
     print(y,7770)
     z = result_frames(f'static/image/{filename}')
+    # for i in z:
+    #     print(i,'log')
+    #     break
     # print(x,890)
+    # print(z.__next__,888)
     print(z,5673)
     # return Response(result_frames(),mimetype='multipart/x-mixed-replace;boundary=frame')
     # return render_template("result.html", file_name = "image/park.mp4")
-    return render_template("result.html",filename=filename,y=y)
+    return render_template("result.html",filename=filename,y=z)
 
 @app.route('/result_final')
 def result_final():
@@ -280,7 +285,14 @@ def result_final():
     return Response(result_frames(f'static/image/{filename}'),mimetype='multipart/x-mixed-replace;boundary=frame')
     # return render_template("result.html", file_name = "image/park.mp4")
 
+@app.route('/team')
+def team():
 
+    return render_template("team.html")
+@app.route('/login')
+def login():
+    
+    return render_template("login.html")
 
 # # API 서비스
 # @app.route('/object_detection', methods=['POST'])
