@@ -60,8 +60,7 @@ app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg','mp4'])
 def upload():
     return render_template('upload.html')
 
-def run_model(video):
-    frame_list = []
+def result_frames(video)-> str:
     # cap = cv2.VideoCapture(video)
     # width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     # height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
@@ -194,13 +193,12 @@ def run_model(video):
                 print(endtimer-tm,'111')
                 if (endtimer - tm) >12:
                     if len(list(a)) == 0:
-                        member_check = '전원출석'
-                        print(member_check)
+                        x = '전원출석'
+                        print(x)
                     else:
                         print('결석 인원 : ',end='')
-                        for member_check in list(a):
-                            print(member_check,end=' ')
-                        member_check = '결석 인원 :' + ' '.join(list(a))
+                        for x in list(a):
+                            print(x,end=' ')
 
                    
                     break
@@ -219,20 +217,16 @@ def run_model(video):
             
                 ret, buffer = cv2.imencode('.jpg', frame)
                 frame1 = buffer.tobytes()
-                frame_list.append(frame1)
-            
-            return frame_list, member_check
-                
+                yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame1 + b'\r\n')
+    print(x,234)
+    video_capture.release()
+    cv2.destroyAllWindows()
 
-def result_frames(video):
-    frame_list, _ = run_model(video)
-    for frame1 in frame_list:
-        yield (b'--frame\r\n'
-            b'Content-Type: image/jpeg\r\n\r\n' + frame1 + b'\r\n')
+    return x   
+           
 
-def cal_attendance(video):
-    _, member_check = run_model(video)
-    return member_check
+
 
 
 
@@ -244,8 +238,8 @@ def upload_process():
     filename = secure_filename(file.filename)
     file.save(os.path.join('static/image/', filename))
     print(filename,8969)
-    y = cal_attendance(f'static/image/{filename}')
-    
+    y = result_frames(f'static/image/{filename}')
+    print(y,'surerere')
     # nparr = np.frombuffer(file.read(), np.uint8)
     # image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
@@ -259,8 +253,7 @@ def upload_process():
     # dst_path = os.path.join('outputs', filename_first + '.jpg')
     # cv2.imwrite(dst_path, image)
     
-    # return redirect(url_for('result',filename=filename,y=y))
-    return render_template("result.html",filename=filename,y=y)
+    return redirect(url_for('result',filename=filename,y=y))
 
 # #outputs 폴더를 일반 웹서버 형식으로 오픈
 # @app.route('/outputs/<path:filename>', methods=['GET', 'POST'])
@@ -269,21 +262,21 @@ def upload_process():
 #     return send_from_directory('outputs', filename)
 
 #디텍션 결과 보여주기
-# @app.route('/result')
-# def result():
-#     filename = request.args.get('filename')
-#     y = request.args.get('y')
-#     print(y,7770)
-#     z = result_frames(f'static/image/{filename}')
-#     # for i in z:
-#     #     print(i,'log')
-#     #     break
-#     # print(x,890)
-#     # print(z.__next__,888)
-#     print(z,5673)
-#     # return Response(result_frames(),mimetype='multipart/x-mixed-replace;boundary=frame')
-#     # return render_template("result.html", file_name = "image/park.mp4")
-#     return render_template("result.html",filename=filename,y=z)
+@app.route('/result')
+def result():
+    filename = request.args.get('filename')
+    y = request.args.get('y')
+    print(y,7770)
+    z = result_frames(f'static/image/{filename}')
+    # for i in z:
+    #     print(i,'log')
+    #     break
+    # print(x,890)
+    # print(z.__next__,888)
+    print(z,5673)
+    # return Response(result_frames(),mimetype='multipart/x-mixed-replace;boundary=frame')
+    # return render_template("result.html", file_name = "image/park.mp4")
+    return render_template("result.html",filename=filename,y=z)
 
 @app.route('/result_final')
 def result_final():
@@ -329,14 +322,12 @@ def login():
 
 
 # start flask app
-# def main():
-#     # os.makedirs('outputs', exist_ok=True)
-#     # tflite_detector.load_model("detect.tflite")
-#     # tflite_catdog.load_model('dogcat.tflite')
-#     args = parse_args()
-#     app.run(host=args.host, port=args.port, debug=args.debug)
-
-if __name__ == "__main__":
-    # main()
+def main():
+    # os.makedirs('outputs', exist_ok=True)
+    # tflite_detector.load_model("detect.tflite")
+    # tflite_catdog.load_model('dogcat.tflite')
     args = parse_args()
     app.run(host=args.host, port=args.port, debug=args.debug)
+
+if __name__ == "__main__":
+    main()

@@ -325,7 +325,7 @@ class ImageClass():
   
 def get_dataset(paths, has_class_directories=True):
     dataset = []
-    for path in paths.split(':'): 
+    for path in paths.split(':'):
         path_exp = os.path.expanduser(path)
         classes = os.listdir(path_exp)
         classes.sort()
@@ -335,7 +335,7 @@ def get_dataset(paths, has_class_directories=True):
             facedir = os.path.join(path_exp, class_name)
             image_paths = get_image_paths(facedir)
             dataset.append(ImageClass(class_name, image_paths))
-  
+    
     return dataset
 
 def get_image_paths(facedir):

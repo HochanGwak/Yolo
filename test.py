@@ -12,92 +12,61 @@ import flask
 import time
 import facenet
 import detect_face
-import tensorflow.compat.v1 as tf
+# import tensorflow.compat.v1 as tf
+import tensorflow as tf
 import pickle
 from PIL import Image
 from werkzeug.utils import secure_filename
-
-
+​
+​
 DEFAULT_PORT = 5000
 DEFAULT_HOST = '0.0.0.0'
-
-
+​
+​
 modeldir = './model/20180402-114759.pb'
 classifier_filename = './class/classifier.pkl'
 npy='./npy'
 train_img="./train_img"
 
 
-
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Tensorflow object detection API')
-
-    parser.add_argument('--debug', dest='debug',
-                        help='Run in debug mode.',
-                        required=False, action='store_true', default=True)
-
-    parser.add_argument('--port', dest='port',
-                        help='Port to run on.', type=int,
-                        required=False, default=DEFAULT_PORT)
-
-    parser.add_argument('--host', dest='host',
-                        help='Host to run on, set to 0.0.0.0 for remote access', type=str,
-                        required=False, default=DEFAULT_HOST)
-
-    args = parser.parse_args()
-    return args
-
 # Initialize the Flask application
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg','mp4'])
-
-
+​
+def parse_args():
+    parser = argparse.ArgumentParser(description='Tensorflow object detection API')
+​
+    parser.add_argument('--debug', dest='debug',
+                        help='Run in debug mode.',
+                        required=False, action='store_true', default=True)
+​
+    parser.add_argument('--port', dest='port',
+                        help='Port to run on.', type=int,
+                        required=False, default=DEFAULT_PORT)
+​
+    parser.add_argument('--host', dest='host',
+                        help='Host to run on, set to 0.0.0.0 for remote access', type=str,
+                        required=False, default=DEFAULT_HOST)
+​
+    args = parser.parse_args()
+    return args
+​
+​
+​
 #웹 서비스
 @app.route('/')
 def upload():
     return render_template('upload.html')
-
-def run_model(video):
+​
+def run_model(video): 
     frame_list = []
-    # cap = cv2.VideoCapture(video)
-    # width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-    # height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    # fps = cap.get(cv2.CAP_PROP_FPS)
-    # time.sleep(0.2)
-    # lastTime = time.time()*1000.0
-
-    # while True:
-    #     ret, image = cap.read()
-    #     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-       
-
-    #     delt = time.time()*1000.0-lastTime
-    #     s = str(int(delt))
-    #     lastTime = time.time()*1000.0
-
-
-    #     # cv2.putText(image, s, (10, 25),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-    #     # now = datetime.datetime.now()
-    #     # timeString = now.strftime("%Y-%m-%d %H:%M")
-    #     # cv2.putText(image, timeString, (10, 45),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
-    #     cv2.imshow("Frame", image)
-    #     key = cv2.waitKey(1) & 0xFF
-    #  # if the `q` key was pressed, break from the loop
-    #     if key == ord("q"):
-    #         break
-   
-    #     ret, buffer = cv2.imencode('.jpg', image)
-    #     frame = buffer.tobytes()
-    #     yield (b'--frame\r\n'
-    #            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
     
-   
     with tf.Graph().as_default():
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.6)
-        sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
+        gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.6)
+        sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(
+            gpu_options=gpu_options, 
+            log_device_placement=False))
         with sess.as_default():
             pnet, rnet, onet = detect_face.create_mtcnn(sess, npy)
             minsize = 30  # minimum size of face
@@ -111,9 +80,9 @@ def run_model(video):
             HumanNames.sort()
             print('Loading Model')
             facenet.load_model(modeldir)
-            images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
-            embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
-            phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
+            images_placeholder = tf.compat.v1.get_default_graph().get_tensor_by_name("input:0")
+            embeddings = tf.compat.v1.get_default_graph().get_tensor_by_name("embeddings:0")
+            phase_train_placeholder = tf.compat.v1.get_default_graph().get_tensor_by_name("phase_train:0")
             embedding_size = embeddings.get_shape()[1]
             classifier_filename_exp = os.path.expanduser(classifier_filename)
             with open(classifier_filename_exp, 'rb') as infile:
@@ -122,11 +91,10 @@ def run_model(video):
             video_capture = cv2.VideoCapture(video)
             print('Start Recognition')
             a = set(HumanNames)
+            
             tm = time.time()
             while True:
                 ret, frame = video_capture.read()
-            
-                #frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)    #resize frame (optional)
                 timer =time.time()
                 if frame.ndim == 2:
                     frame = facenet.to_rgb(frame)
@@ -187,9 +155,6 @@ def run_model(video):
                         
                 endtimer = time.time()
                 fps = 1/(endtimer-timer)
-                # cv2.rectangle(frame,(15,30),(135,60),(0,255,255),-1)
-                # cv2.putText(frame, "fps: {:.2f}".format(fps), (20, 50),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
-                cv2.imshow('Face Recognition', frame)
                 key = cv2.waitKey(30)
                 print(endtimer-tm,'111')
                 if (endtimer - tm) >12:
@@ -199,82 +164,52 @@ def run_model(video):
                     else:
                         print('결석 인원 : ',end='')
                         for member_check in list(a):
-                            print(member_check,end=' ')
+                            print(member_check, end=' ')
                         member_check = '결석 인원 :' + ' '.join(list(a))
-
-                   
                     break
-                # key= cv2.waitKey(1)
-                # if key== 113: # "q"
-                #     #직접 작성스타트
-                #     # print(result_names,'aaa')
-                #     if len(list(a)) == 0:
-                #         print('전원출석')
-                #     else:
-                #         print('결석 인원 : ',end='')
-                #         for i in list(a):
-                #             print(i,end=' ')
-                
-                #     break
             
                 ret, buffer = cv2.imencode('.jpg', frame)
                 frame1 = buffer.tobytes()
                 frame_list.append(frame1)
-            
+                
             return frame_list, member_check
                 
-
+                
 def result_frames(video):
     frame_list, _ = run_model(video)
     for frame1 in frame_list:
         yield (b'--frame\r\n'
             b'Content-Type: image/jpeg\r\n\r\n' + frame1 + b'\r\n')
-
+​
 def cal_attendance(video):
     _, member_check = run_model(video)
     return member_check
-
-
-
-
+​
+​
 #디텍션 처리
 @app.route('/upload_process', methods=['POST'])
 def upload_process():
     file = request.files['file']
     filename = secure_filename(file.filename)
-    file.save(os.path.join('static/image/', filename))
     print(filename,8969)
     y = cal_attendance(f'static/image/{filename}')
     
-    # nparr = np.frombuffer(file.read(), np.uint8)
-    # image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    # filename_first = datetime.datetime.now().strftime('%y%m%d_%H%M%S')
-
-    # dst = tflite_catdog.run(image)
-
-    # json_path = os.path.join('outputs', filename_first + '.json')
-    # json.dump({'rate':float(dst)},open(json_path,'w'))
-    
-    # dst_path = os.path.join('outputs', filename_first + '.jpg')
-    # cv2.imwrite(dst_path, image)
-    
-    # return redirect(url_for('result',filename=filename,y=y))
     return render_template("result.html",filename=filename,y=y)
-
+​
 # #outputs 폴더를 일반 웹서버 형식으로 오픈
 # @app.route('/outputs/<path:filename>', methods=['GET', 'POST'])
 # def download(filename):
 #     output_path = os.path.join(app.root_path, 'outputs')
 #     return send_from_directory('outputs', filename)
-
-#디텍션 결과 보여주기
+​
+# #디텍션 결과 보여주기
 # @app.route('/result')
 # def result():
 #     filename = request.args.get('filename')
 #     y = request.args.get('y')
 #     print(y,7770)
-#     z = result_frames(f'static/image/{filename}')
+#     z, frames = result_frames(f'static/image/{filename}')
+    
 #     # for i in z:
 #     #     print(i,'log')
 #     #     break
@@ -284,59 +219,56 @@ def upload_process():
 #     # return Response(result_frames(),mimetype='multipart/x-mixed-replace;boundary=frame')
 #     # return render_template("result.html", file_name = "image/park.mp4")
 #     return render_template("result.html",filename=filename,y=z)
-
+​
 @app.route('/result_final')
 def result_final():
     filename = request.args.get('filename')
     print('error',filename,'5457')
-    return Response(result_frames(f'static/image/{filename}'),mimetype='multipart/x-mixed-replace;boundary=frame')
+​
+    return Response(result_frames(f'static/image/{filename}'), mimetype='multipart/x-mixed-replace;boundary=frame')
     # return render_template("result.html", file_name = "image/park.mp4")
-
+​
 @app.route('/team')
 def team():
-
     return render_template("team.html")
+​
 @app.route('/login')
 def login():
-    
     return render_template("login.html")
-
+​
 # # API 서비스
 # @app.route('/object_detection', methods=['POST'])
 # def infer():
 #     nparr = np.frombuffer(request.data, np.uint8)
 #     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
+​
 #     rects, classes, scores = tflite_detector.inference(img)
-
+​
 #     result = {'rects':rects.tolist(), 'classes':classes.tolist(), 'scores':scores.tolist()}
 #     response = json.dumps(result)
-
+​
 #     return Response(response=response, status=200, mimetype="application/json")
-
+​
 # import io
 # # API 서비스
 # @app.route('/color_service', methods=['POST'])
 # def color_service():
 #     nparr = np.frombuffer(request.data, np.uint8)
 #     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
+​
 #     dst = tflite_color.run(img)
-
+​
 #     _, buf = cv2.imencode('.jpg', dst)
 #     return flask.send_file(io.BytesIO(buf), download_name='result.jpg', mimetype='image/jpeg')
-
-
-
+​
+​
+​
 # start flask app
 # def main():
-#     # os.makedirs('outputs', exist_ok=True)
-#     # tflite_detector.load_model("detect.tflite")
-#     # tflite_catdog.load_model('dogcat.tflite')
-#     args = parse_args()
-#     app.run(host=args.host, port=args.port, debug=args.debug)
-
 if __name__ == "__main__":
-    # main()
+    # os.makedirs('outputs', exist_ok=True)
+    # tflite_detector.load_model("detect.tflite")
+    # tflite_catdog.load_model('dogcat.tflite')
+​
     args = parse_args()
-    app.run(host=args.host, port=args.port, debug=args.debug)
+    app.run(host=args.host, port=args.port)

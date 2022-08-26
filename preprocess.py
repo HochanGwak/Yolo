@@ -17,7 +17,8 @@ class preprocesses:
         self.output_datadir = output_datadir
 
     def collect_data(self):
-        output_dir = os.path.expanduser(self.output_datadir)
+        output_dir = os.path.expanduser(self.output_datadir) # "self.output_datadir"가 위치한 절대 경로를 알려줌
+
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 

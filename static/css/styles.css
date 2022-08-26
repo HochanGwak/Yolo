@@ -11399,11 +11399,12 @@ header.masthead {
   padding-bottom: 6rem;
   text-align: center;
   color: #fff;
-  background-image: url("../image/back-2.jpg");
+  background-image: url("../image/back-4.jpg");
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
   background-size: cover;
+  height: 30rem;/*수정50vh혹은30rem*/
 }
 header.masthead .masthead-subheading {
   font-size: 1.5rem;
