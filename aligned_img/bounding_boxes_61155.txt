@@ -1,0 +1,9 @@
+./aligned_img\hochan\hochan_5.png 60 203 641 990
+./aligned_img\hochan\hochan_6.png 483 211 825 626
+./aligned_img\hochan\hochan_7.png 272 433 833 1156
+./aligned_img\hochan\hochan_8.png 102 81 245 270
+./aligned_img\hochan\hochan_9.png 237 298 648 830
+./aligned_img\hyeonA\hyeonA_1.png 362 321 616 661
+./aligned_img\hyeonA\hyeonA_10.png 298 281 702 798
+./aligned_img\hyeonA\hyeonA_2.png 151 206 406 573
+./aligned_img\hyeonA\hyeonA_3.png 840 555 1391 1302

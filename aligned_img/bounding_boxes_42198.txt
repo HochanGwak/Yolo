@@ -1,0 +1,5 @@
+./aligned_img\hyeonA\hyeonA_29.png 812 904 1150 1372
+./aligned_img\hyeonA\hyeonA_30.png 664 514 1278 1353
+./aligned_img\hyeonA\hyeonA_31.png 599 372 1272 1326
+./aligned_img\hyeonA\hyeonA_32.png 578 946 953 1444
+./aligned_img\hyeonA\hyeonA_33.png 103 655 305 918

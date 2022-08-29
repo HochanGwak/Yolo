@@ -1,0 +1,4 @@
+./aligned_img\hyeonA\hyeonA_71.png 411 344 1774 2252
+./aligned_img\hyeonA\hyeonA_72.png 301 120 1955 2389
+./aligned_img\hyeonA\hyeonA_73.png 486 368 1787 2210
+./aligned_img\hyeonA\hyeonA_74.png 342 91 1908 2276

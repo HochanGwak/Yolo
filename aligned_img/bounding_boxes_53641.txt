@@ -1,0 +1,2 @@
+./aligned_img\sooin\sooin_10.png 110 217 449 670
+./aligned_img\sooin\sooin_2.png 499 111 843 558

@@ -1,0 +1,2 @@
+./aligned_img\hyeonA\hyeonA_35.png 238 445 1013 1194
+./aligned_img\hyeonA\hyeonA_36.png 606 323 1056 863

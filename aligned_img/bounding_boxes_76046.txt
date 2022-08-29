@@ -1,0 +1,17 @@
+./aligned_img\hyeonA\hyeonA_11.png 453 296 704 657
+./aligned_img\hyeonA\hyeonA_12.png 216 180 746 934
+./aligned_img\hyeonA\hyeonA_13.png 84 94 557 705
+./aligned_img\hyeonA\hyeonA_14.png 344 194 1595 1864
+./aligned_img\hyeonA\hyeonA_15.png 277 372 611 781
+./aligned_img\hyeonA\hyeonA_16.png 120 349 588 930
+./aligned_img\hyeonA\hyeonA_17.png 125 342 477 780
+./aligned_img\hyeonA\hyeonA_18.png 262 483 579 889
+./aligned_img\hyeonA\hyeonA_19.png 47 306 497 857
+./aligned_img\hyeonA\hyeonA_20.png 317 92 817 750
+./aligned_img\hyeonA\hyeonA_21.png 359 274 609 606
+./aligned_img\hyeonA\hyeonA_22.png 188 119 563 623
+./aligned_img\hyeonA\hyeonA_23.png 2 382 430 933
+./aligned_img\hyeonA\hyeonA_24.png 492 26 1381 1262
+./aligned_img\hyeonA\hyeonA_25.png 193 288 445 597
+./aligned_img\hyeonA\hyeonA_26.png 114 305 378 668
+./aligned_img\hyeonA\hyeonA_27.png 83 341 309 664

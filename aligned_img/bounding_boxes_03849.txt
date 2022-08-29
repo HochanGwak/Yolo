@@ -1,0 +1,1 @@
+./aligned_img\hochan\hochan_20.png 172 321 639 947

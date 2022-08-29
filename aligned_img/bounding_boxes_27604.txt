@@ -1,0 +1,14 @@
+./aligned_img\sooin\sooin_30.png 188 72 717 797
+./aligned_img\sooin\sooin_31.png 85 303 536 863
+./aligned_img\sooin\sooin_32.png 142 379 461 811
+./aligned_img\sooin\sooin_33.png 183 223 653 860
+./aligned_img\sooin\sooin_35.png 276 229 795 926
+./aligned_img\sooin\sooin_36.png 57 149 596 911
+./aligned_img\sooin\sooin_37.png 133 103 609 736
+./aligned_img\sooin\sooin_38.png 205 371 506 785
+./aligned_img\sooin\sooin_39.png 123 212 708 974
+./aligned_img\sooin\sooin_40.png 102 392 447 813
+./aligned_img\sooin\sooin_41.png 175 203 645 876
+./aligned_img\sooin\sooin_43.png 89 392 481 928
+./aligned_img\sooin\sooin_44.png 192 407 533 866
+./aligned_img\sooin\sooin_45.png 151 369 492 820

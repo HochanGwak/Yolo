@@ -1,0 +1,9 @@
+./aligned_img\hyeonA\hyeonA_48.png 535 191 1881 1934
+./aligned_img\hyeonA\hyeonA_49.png 542 196 1639 1768
+./aligned_img\hyeonA\hyeonA_50.png 698 371 1715 1762
+./aligned_img\hyeonA\hyeonA_51.png 516 294 1541 1585
+./aligned_img\hyeonA\hyeonA_52.png 616 141 1749 1678
+./aligned_img\hyeonA\hyeonA_53.png 640 425 1598 1749
+./aligned_img\hyeonA\hyeonA_54.png 472 273 1476 1699
+./aligned_img\hyeonA\hyeonA_55.png 582 236 1788 1913
+./aligned_img\hyeonA\hyeonA_56.png 366 57 1723 2004

@@ -1,0 +1,9 @@
+./aligned_img\hochan\hochan_11.png 384 356 756 824
+./aligned_img\hochan\hochan_12.png 341 440 736 925
+./aligned_img\hochan\hochan_13.png 406 374 868 888
+./aligned_img\hochan\hochan_14.png 478 228 877 749
+./aligned_img\hochan\hochan_15.png 472 215 813 648
+./aligned_img\hochan\hochan_16.png 601 212 1079 821
+./aligned_img\hochan\hochan_17.png 366 385 680 812
+./aligned_img\hochan\hochan_18.png 405 473 742 901
+./aligned_img\hochan\hochan_19.png 333 377 752 889

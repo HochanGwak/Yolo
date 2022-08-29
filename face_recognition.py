@@ -10,7 +10,7 @@ import time
 import pickle
 from PIL import Image
 import tensorflow.compat.v1 as tf
-video= 'park_yu.mp4'
+video= 'test.mp4'
 # video= 'naver_0082.jpg'
 modeldir = './model/20180402-114759.pb'
 classifier_filename = './class/classifier.pkl'
@@ -47,7 +47,7 @@ with tf.Graph().as_default():
         with open(classifier_filename_exp, 'rb') as infile:
             (model, class_names) = pickle.load(infile,encoding='latin1')
         
-        video_capture = cv2.VideoCapture(0)
+        video_capture = cv2.VideoCapture(video)
 
         # fps = video_capture.get(cv2.CAP_PROP_FPS)
         fps = 10
