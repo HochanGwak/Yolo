@@ -10,7 +10,7 @@ import time
 import pickle
 from PIL import Image
 import tensorflow.compat.v1 as tf
-video= 'test.mp4'
+video= 'yu.mp4'
 # video= 'naver_0082.jpg'
 modeldir = './model/20180402-114759.pb'
 classifier_filename = './class/classifier.pkl'
@@ -122,7 +122,7 @@ with tf.Graph().as_default():
                         emb_array[0, :] = sess.run(embeddings, feed_dict=feed_dict)
                         predictions = model.predict_proba(emb_array)
                         best_class_indices = np.argmax(predictions, axis=1)
-                      
+
                         
                         best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
                         if best_class_probabilities>0.87:
